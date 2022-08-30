@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>姓名案例-计算属性实现</title>
+    <!-- 计算属性是指，把写完的属性重新加工，生成一个新的属性
+    Vue中是把属性与计算属性分开放的，data中放的是属性。
+    计算属性需要放在一个全新的配置项中，这个全新的配置项是computed -->
+
+
+
+    <!-- data中的属性是什么，出现在vm中的就是什么；methods中的属性是什么，出现在vm中的就是什么，methods中写一个函数，则vm中就有该函数；
+    但是computed不能这么理解，不能说它里面有一个fullName对象，vm里就会有fullName对象
+    它往vm中放的时候，自动去找get，调用get，拿到get的返回值，然后放在vm身上，放的时候名字叫fullName
+     -->
+
+    <!-- 
+    计算属性：
+        1.定义：要用的属性不存在，要通过已有的属性计算得来。（一定得是属性，不能是变量，变量已经脱离Vue的管理了）
+
+        2.原理：底层借助了Object.defineproperty方法提供的getter和setter。
+
+        3.get函数什么时候执行？
+        初次取数会被调用  计算属性依赖的数据发生改变时会被再次调用
+
+        4.优势：与methods实现相比，内部有缓存机制（复用），效率更高，调试方便。
+
+        5.备注：
+          （1）计算属性最终会出现在vm上，直接读取使用即可。
+          （2）如果计算属性要被修改，那必须写set函数去响应修改，且set中要有能引起计算属性依赖的数据发生改变的逻辑。
+     -->
+
+
+    <!-- 引入Vue -->
+    <script type="text/javascript" src="../js/vue.js"></script>
+</head>
+<body>
+    <div id="root">
+        姓：<input type="text" v-model:value="firstName"><br/>
+        名：<input type="text" v-model="lastName"><br/>
+        姓名：<span>{{fullName}}</span>  
+        
+    </div>
+</body>
+<script type="text/javascript">
+    Vue.config.productionTip = false
+    const vm = new Vue({
+        el:'#root',
+        data:{
+            firstName:'张',
+            lastName:'三'
+        },
+        computed:{
+            fullName:{
+                //get有什么作用？当有人读取fullName时，get就会被调用，且返回值就作为fullName的值
+                //get什么时候调用？1.初次读取fullName时；2.所依赖的数据发生变化时
+                get(){
+                    console.log('get被调用了');
+                    // console.log(this)此处的this是vm
+                    return this.firstName + '-' + this.lastName
+                },
+                //当fullName需要被修改时，要写set
+                //set什么时候被调用？当fullName被修改时。
+                set(value){
+                    // console.log('set',value)//在控制台测试用
+                    const arr = value.split('-')
+                    this.firstName = arr[0]
+                    this.lastName = arr[1]
+                }
+                
+            }
+        }
+        }
+    )
+</script>
+</html>

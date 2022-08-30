@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>事件修饰符</title>
+    <!-- 引入Vue -->
+    <!-- 修饰符可以连续写 -->
+    <script type="text/javascript" src="../js/vue.js"></script>
+    <style>
+        *{
+            margin-top: 20px;
+        }
+        .demo1{
+            height: 50;
+            background-color: skyblue;
+        }
+        .box1{
+            padding: 5px;
+            background-color: skyblue;
+        }
+        .box2{
+            padding: 5px;
+            background-color: orange;
+        }
+    </style>
+</head>
+<body>
+    <div id="root">
+        <h2>欢迎来到{{name}}学习</h2>
+        <!-- 阻止默认事件。click为事件，prevent为事件修饰符，阻止跳转链接。 -->
+        <a href="http://www.atguigu.com" @click.prevent="showInfo">点我提示信息</a>
+
+        <!-- 组织事件冒泡 -->
+        <div class="demo1" @click="showInfo">
+        <button @click.stop="showInfo">点我提示信息</button> 
+        </div>
+
+        <!-- 事件只触发一次 -->
+        <button @click.once="showInfo">点我提示信息</button> 
+
+        <!-- 使用事件的捕获模式 -->
+        <div class="box1" @click.capture="showMsg(1)">
+            div1
+            <div class="box2" @click="showMsg(2)">
+                div2
+            </div>
+        </div>
+
+        <!-- 只有event.target是当前操作的元素时才触发事件 -->
+        <div class="demo1" @click.self="showInfo">
+            <button @click="showInfo">点我提示信息</button> 
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+    Vue.config.productionTip = false
+    
+    new Vue({
+        el:'#root',
+        data:{
+            name:'尚硅谷'
+        },
+    methods:{
+        showInfo(e){
+            //alert('同学你好')
+            console.log(e.target)
+        },
+        showMsg(Msg){
+            console.log(Msg);
+        }
+    }
+
+    })
+</script>
+</html>
